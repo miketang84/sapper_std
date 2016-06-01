@@ -27,7 +27,7 @@ macro_rules! res_redirect {
     ($redirect_uri:expr) => ({
         use sapper::Response;
         use sapper::status;
-	use sapper::header::location;
+	use sapper::header::Location;
 
         let mut response = Response::new();
         response.set_status(status::Found);
