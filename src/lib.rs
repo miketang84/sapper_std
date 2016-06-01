@@ -191,7 +191,7 @@ macro_rules! check_param {
                 &param[0]
             },
             None => {
-                res_400!(format!("no {} value in params", $key))
+                return res_400!(format!("no {} value in params", $key))
             }
         }
     })
