@@ -7,4 +7,5 @@ authors = ["Mike Tang <miketang84@outlook.com>"]
 serde = "0.7"
 serde_json = "0.7"
 sapper = { git="https://github.com/sappworks/sapper" }
+sapper_tmpl = { git="https://github.com/sappworks/sapper_tmpl" }
 

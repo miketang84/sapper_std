@@ -1,12 +1,32 @@
 extern crate sapper;
+extern crate sapper_tmpl;
 extern crate serde;
 extern crate serde_json;
 
 #[macro_export]
+macro_rules! res_html {
+    ($html:expr, $context:expr) => ({
+        use sapper::Response;
+	use sapper::header::ContentType;
+	use sapper_tmpl::render;
+
+        let res_str = render($html, $context);
+
+        let mut response = Response::new();
+        response.headers_mut().set(ContentType::html());
+        response.write_body(res_str);
+
+        Ok(response)
+    })
+}
+
+
+#[macro_export]
 macro_rules! res_json {
     ($json:expr) => ({
-        use sapper::Response;
         use serde_json;
+        use sapper::Response;
+	use sapper::header::ContentType;
 
         let mut response = Response::new();
         response.headers_mut().set(ContentType::json());
