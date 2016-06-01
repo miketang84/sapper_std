@@ -129,7 +129,8 @@ macro_rules! get_db {
             },
             None => return res_500!("no db defined.")
         };
-
+        
+        db
     })
 }
 
@@ -141,7 +142,7 @@ macro_rules! get_params {
                 params
             },
             None => return res_400!("no params")
-        };
+        }
     })
 }
 
