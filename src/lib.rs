@@ -69,6 +69,52 @@ macro_rules! res_json_error {
     })
 }
 
+#[macro_export]
+macro_rules! res_400 {
+    ($info:expr) => ({
+        use sapper::Response;
+        use sapper::status;
+
+        let mut response = Response::new();
+        response.set_status(status::BadRequest);
+        response.write_body($info.to_owned());
+
+        Ok(response)
+    })
+}
+
+#[macro_export]
+macro_rules! res_500 {
+    ($info:expr) => ({
+        use sapper::Response;
+        use sapper::status;
+
+        let mut response = Response::new();
+        response.set_status(status::InternalServerError);
+        response.write_body($info.to_owned());
+
+        Ok(response)
+    })
+}
+
+#[macro_export]
+macro_rules! get_db {
+    ($req:expr, $dbkey:ty) => ({
+        let pool_wr = $req.ext().get::<$dbkey>();
+        let db = match pool_wr {
+            Some(pool) => {
+                match pool.connect() {
+                    Ok(conn) => conn,
+                    Err(_) => {
+                        return res_500!("get db connection failed.")
+                    }
+                }
+            },
+            None => return res_500!("no db defined.")
+        };
+
+    })
+}
 
 #[cfg(test)]
 mod tests {
