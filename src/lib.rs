@@ -22,6 +22,21 @@ macro_rules! res_html {
     })
 }
 
+#[macro_export]
+macro_rules! res_redirect {
+    ($redirect_uri:expr) => ({
+        use sapper::Response;
+        use sapper::status;
+	use sapper::header::location;
+
+        let mut response = Response::new();
+        response.set_status(status::Found);
+        response.headers_mut().set(Location($redirect_uri.to_owned()));
+
+        Ok(response)
+    })
+}
+
 
 #[macro_export]
 macro_rules! res_json {
