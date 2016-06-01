@@ -1,5 +1,7 @@
 extern crate sapper;
 extern crate sapper_tmpl;
+extern crate sapper_query_params;
+extern crate sapper_body_params;
 extern crate serde;
 extern crate serde_json;
 
@@ -115,6 +117,71 @@ macro_rules! get_db {
 
     })
 }
+
+#[macro_export]
+macro_rules! get_params {
+    ($req:expr, $tykey:ty) => ({
+        match $req.ext().get::<$tykey>() {
+            Some(params) => {
+                params
+            },
+            None => return res_400!("get params error")
+        };
+    })
+}
+
+
+#[macro_export]
+macro_rules! get_query_params {
+    ($req:expr) => ({
+        use sapper_query_params::ReqQueryParams;
+
+        get_params!($req, ReqQueryParams)
+    })
+}
+
+#[macro_export]
+macro_rules! get_body_params {
+    ($req:expr) => ({
+        use sapper_body_params::ReqBodyParams;
+
+        get_params!($req, ReqBodyParams)
+    })
+}
+
+#[macro_export]
+macro_rules! get_json_params {
+    ($req:expr) => ({
+        use sapper_body_params::ReqJsonParams;
+
+        get_params!($req, ReqJsonParams)
+    })
+}
+
+#[macro_export]
+macro_rules! get_path_params {
+    ($req:expr) => ({
+        use sapper::ReqPathParams;
+
+        get_params!($req, ReqPathParams)
+    })
+}
+
+
+#[macro_export]
+macro_rules! check_param {
+    ($params:expr, $key:expr) => ({
+        match $params.get($key) {
+            Some(ref param) => {
+                &param[0]
+            },
+            None => {
+                res_400!(format!("no {} value in params", $key))
+            }
+        }
+    })
+}
+
 
 #[cfg(test)]
 mod tests {

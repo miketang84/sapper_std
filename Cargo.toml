@@ -8,4 +8,6 @@ serde = "0.7"
 serde_json = "0.7"
 sapper = { git="https://github.com/sappworks/sapper" }
 sapper_tmpl = { git="https://github.com/sappworks/sapper_tmpl" }
+sapper_query_params = { git="https://github.com/sappworks/sapper_query_params" }
+sapper_body_params = { git="https://github.com/sappworks/sapper_body_params" }
 
