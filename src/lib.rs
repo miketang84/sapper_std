@@ -125,7 +125,7 @@ macro_rules! get_params {
             Some(params) => {
                 params
             },
-            None => return res_400!("get params error")
+            None => return res_400!("no params")
         };
     })
 }
