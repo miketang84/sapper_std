@@ -4,10 +4,10 @@ version = "0.1.0"
 authors = ["Mike Tang <miketang84@outlook.com>"]
 
 [dependencies]
-serde = "0.7"
-serde_json = "0.7"
+serde = "1.0.7"
+serde_json = "1.0.2"
 sapper = { git="https://github.com/sappworks/sapper" }
+sapper_query = { git="https://github.com/sappworks/sapper_query" }
+sapper_body = { git="https://github.com/sappworks/sapper_body" }
 sapper_tmpl = { git="https://github.com/sappworks/sapper_tmpl" }
-sapper_query_params = { git="https://github.com/sappworks/sapper_query_params" }
-sapper_body_params = { git="https://github.com/sappworks/sapper_body_params" }
 
