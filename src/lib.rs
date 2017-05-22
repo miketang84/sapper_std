@@ -108,7 +108,7 @@ macro_rules! res_json_ok {
         use serde_json;
         
         let json2ret = json!({
-            "success": true.
+            "success": true,
             "info": $info
         });
 
@@ -123,7 +123,7 @@ macro_rules! res_json_error {
         use serde_json;
         
         let json2ret = json!({
-            "success": false.
+            "success": false,
             "info": $info
         });
         
