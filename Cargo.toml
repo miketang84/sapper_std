@@ -1,5 +1,5 @@
 [package]
-name = "sapper_macros"
+name = "sapper_std"
 version = "0.1.0"
 authors = ["Mike Tang <miketang84@outlook.com>"]
 
@@ -10,4 +10,7 @@ sapper = { git="https://github.com/sappworks/sapper" }
 sapper_query = { git="https://github.com/sappworks/sapper_query" }
 sapper_body = { git="https://github.com/sappworks/sapper_body" }
 sapper_tmpl = { git="https://github.com/sappworks/sapper_tmpl" }
+sapper_session = { git="https://github.com/sappworks/sapper_session" }
+sapper_logger = { git="https://github.com/sappworks/sapper_logger" }
+
 

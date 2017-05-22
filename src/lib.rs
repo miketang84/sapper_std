@@ -2,9 +2,40 @@ extern crate sapper;
 extern crate sapper_tmpl;
 extern crate sapper_query;
 extern crate sapper_body;
+extern crate sapper_session;
+extern crate sapper_logger;
+
 extern crate serde;
 #[macro_use]
 extern crate serde_json;
+
+use sapper::{Request, Response, Result, Key};
+
+pub use sapper::PathParams;
+pub use sapper_query::QueryParams;
+pub use sapper_body::FormParams;
+pub use sapper_body::JsonParams;
+pub use sapper_session::SessionVal;
+
+
+pub fn init(req: &mut Request) -> Result<()> {
+    sapper_logger::init(req)?;
+    sapper_query::parse(req)?;
+    sapper_body::parse(req)?;
+    sapper_session::session_val(req, "_sapp_session")?;
+    
+    Ok(())
+
+}
+
+
+pub fn finish(req: &Request, res: &mut Response) -> Result<()> {
+    
+    
+    sapper_logger::log(req, res)?;
+
+    Ok(())
+}
 
 
 // ============ Status Code ============
@@ -210,7 +241,7 @@ macro_rules! t_condition {
     })
 }
 
-
+#[macro_export]
 macro_rules! _missing_or_unrecognized {
     ($field:expr) => ({
         println!("missing or unrecognized parameter {}.", $field);
@@ -218,6 +249,7 @@ macro_rules! _missing_or_unrecognized {
     })
 }
 
+#[macro_export]
 macro_rules! _use_default {
     ($field:expr, $default:expr) => ({
         println!("missing or unrecognized parameter {}, using default {}.", $field, $default);
@@ -228,6 +260,7 @@ macro_rules! _use_default {
 
 
 // for PathParams, QueryParams and FormParams
+#[macro_export]
 macro_rules! t_param {
     ($params:expr, $field:expr) => ({
         match $params.get(&$field) {
@@ -238,6 +271,7 @@ macro_rules! t_param {
 }
 
 // for PathParams, QueryParams and FormParams, default version
+#[macro_export]
 macro_rules! t_param_default {
     ($params:expr, $field:expr, $default:expr) => ({
         match $params.get(&$field) {
@@ -247,7 +281,7 @@ macro_rules! t_param_default {
     })
 }
 
-
+#[macro_export]
 macro_rules! t_str {
     ($params:expr, $field:expr) => ({
         match $params.get(&$field) {
@@ -257,6 +291,7 @@ macro_rules! t_str {
     })
 }
 
+#[macro_export]
 macro_rules! t_str_default {
     ($params:expr, $field:expr, $default:expr) => ({
         match $params.get(&$field) {
@@ -266,6 +301,7 @@ macro_rules! t_str_default {
     })
 }
 
+#[macro_export]
 macro_rules! t_i64 {
     ($params:expr, $field:expr) => ({
         match $params.get(&$field) {
@@ -276,6 +312,7 @@ macro_rules! t_i64 {
     })
 }
 
+#[macro_export]
 macro_rules! t_i64_default {
     ($params:expr, $field:expr, $default:expr) => ({
         match $params.get(&$field) {
@@ -286,6 +323,7 @@ macro_rules! t_i64_default {
     })
 }
 
+#[macro_export]
 macro_rules! t_f64 {
     ($params:expr, $field:expr) => ({
         match $params.get(&$field) {
@@ -297,6 +335,7 @@ macro_rules! t_f64 {
     })
 }
 
+#[macro_export]
 macro_rules! t_f64_default {
     ($params:expr, $field:expr, $default:expr) => ({
         match $params.get(&$field) {
@@ -308,6 +347,7 @@ macro_rules! t_f64_default {
     })
 }
 
+#[macro_export]
 macro_rules! t_bool {
     ($params:expr, $field:expr) => ({
         match $params.get(&$field) {
@@ -317,6 +357,7 @@ macro_rules! t_bool {
     })
 }
 
+#[macro_export]
 macro_rules! t_bool_default {
     ($params:expr, $field:expr, $default:expr) => ({
         match $params.get(&$field) {
@@ -326,6 +367,7 @@ macro_rules! t_bool_default {
     })
 }
 
+#[macro_export]
 macro_rules! t_map {
     ($params:expr, $field:expr) => ({
         match $params.get(&$field) {
@@ -335,6 +377,7 @@ macro_rules! t_map {
     })
 }
 
+#[macro_export]
 macro_rules! t_map_default {
     ($params:expr, $field:expr, $default:expr) => ({
         match $params.get(&$field) {
@@ -344,6 +387,7 @@ macro_rules! t_map_default {
     })
 }
 
+#[macro_export]
 macro_rules! t_array {
     ($params:expr, $field:expr) => ({
         match $params.get(&$field) {
@@ -353,6 +397,7 @@ macro_rules! t_array {
     })
 }
 
+#[macro_export]
 macro_rules! t_array_default {
     ($params:expr, $field:expr, $default:expr) => ({
         match $params.get(&$field) {
