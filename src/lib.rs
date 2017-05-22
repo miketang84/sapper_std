@@ -106,7 +106,6 @@ macro_rules! res_json_ok {
     ($info:expr) => ({
         use sapper::Response;
         use serde_json;
-        use serde_json::builder::ObjectBuilder;
         
         let json2ret = json!({
             "success": true.
@@ -122,8 +121,6 @@ macro_rules! res_json_error {
     ($info:expr) => ({
         use sapper::Response;
         use serde_json;
-        use serde_json::builder::ObjectBuilder;
-
         
         let json2ret = json!({
             "success": false.
