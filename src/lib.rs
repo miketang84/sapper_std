@@ -6,10 +6,9 @@ extern crate sapper_session;
 extern crate sapper_logger;
 
 extern crate serde;
-#[macro_use]
 extern crate serde_json;
 
-use sapper::{Request, Response, Result, Key};
+use sapper::{Request, Response, Result};
 
 pub use sapper::PathParams;
 pub use sapper_query::QueryParams;
@@ -190,8 +189,6 @@ macro_rules! get_params {
 #[macro_export]
 macro_rules! get_path_params {
     ($req:expr) => ({
-        use sapper::PathParams;
-
         get_params!($req, PathParams)
     })
 }
@@ -200,8 +197,6 @@ macro_rules! get_path_params {
 #[macro_export]
 macro_rules! get_query_params {
     ($req:expr) => ({
-        use sapper_query::QueryParams;
-
         get_params!($req, QueryParams)
     })
 }
@@ -209,8 +204,6 @@ macro_rules! get_query_params {
 #[macro_export]
 macro_rules! get_form_params {
     ($req:expr) => ({
-        use sapper_body::FormParams;
-
         get_params!($req, FormParams)
     })
 }
@@ -218,8 +211,6 @@ macro_rules! get_form_params {
 #[macro_export]
 macro_rules! get_json_params {
     ($req:expr) => ({
-        use sapper_body::JsonParams;
-
         get_params!($req, JsonParams)
     })
 }
