@@ -16,7 +16,7 @@ pub use sapper_body::FormParams;
 pub use sapper_body::JsonParams;
 pub use sapper_session::SessionVal;
 pub use sapper_tmpl::Context;
-
+pub use sapper_tmpl::render;
 
 pub fn init(req: &mut Request) -> Result<()> {
     sapper_logger::init(req)?;
@@ -46,7 +46,9 @@ macro_rules! res_redirect {
 
         let mut response = Response::new();
         response.set_status(status::Found);
+        //response.set_status(status::TemporaryRedirect);
         response.headers_mut().set(Location($redirect_uri.to_owned()));
+        response.write_body(format!("redirect to {}", $redirect_uri));
 
         Ok(response)
     })
@@ -135,7 +137,6 @@ macro_rules! res_html {
     ($html:expr, $context:expr) => ({
         use sapper::Response;
         use sapper::header::ContentType;
-        use sapper_tmpl::render;
 
         let res_str = render($html, $context);
 
