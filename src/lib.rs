@@ -15,6 +15,7 @@ pub use sapper_query::QueryParams;
 pub use sapper_body::FormParams;
 pub use sapper_body::JsonParams;
 pub use sapper_session::SessionVal;
+pub use sapper_tmpl::Context;
 
 
 pub fn init(req: &mut Request) -> Result<()> {
@@ -24,13 +25,10 @@ pub fn init(req: &mut Request) -> Result<()> {
     sapper_session::session_val(req, "_sapp_session")?;
     
     Ok(())
-
 }
 
 
 pub fn finish(req: &Request, res: &mut Response) -> Result<()> {
-    
-    
     sapper_logger::log(req, res)?;
 
     Ok(())
@@ -251,8 +249,8 @@ macro_rules! _use_default {
 #[macro_export]
 macro_rules! t_param {
     ($params:expr, $field:expr) => ({
-        match $params.get(&$field) {
-            Some(&astr) => astr,
+        match $params.get($field) {
+            Some(ref astr) => &astr[0],
             None =>  _missing_or_unrecognized! ($field)
         }
     })
@@ -262,12 +260,14 @@ macro_rules! t_param {
 #[macro_export]
 macro_rules! t_param_default {
     ($params:expr, $field:expr, $default:expr) => ({
-        match $params.get(&$field) {
-            Some(ref astr) => astr,
+        match $params.get($field) {
+            Some(ref astr) => &astr[0],
             None =>  _using_default! ($field, $default)
         }
     })
 }
+
+// ========== for JSON ==========
 
 #[macro_export]
 macro_rules! t_str {
