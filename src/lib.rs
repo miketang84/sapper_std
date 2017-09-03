@@ -229,10 +229,18 @@ macro_rules! t_condition {
 }
 
 #[macro_export]
+macro_rules! _parse_error {
+    ($field:expr) => ({
+        println!("parse parameter type error {}.", $field);
+        return res_400!(format!("parse parameter type error {}.", $field));
+    })
+}
+
+#[macro_export]
 macro_rules! _missing_or_unrecognized {
     ($field:expr) => ({
         println!("missing or unrecognized parameter {}.", $field);
-        return res_400!(format!("missing or unrecognized parameter {}.", $field) );
+        return res_400!(format!("missing or unrecognized parameter {}.", $field));
     })
 }
 
@@ -242,6 +250,24 @@ macro_rules! _use_default {
         println!("missing or unrecognized parameter {}, using default {}.", $field, $default);
         // return default
         $default
+    })
+}
+
+
+
+#[macro_export]
+macro_rules! t_param_parse {
+    ($params:expr, $field:expr, $tykey:ty) => ({
+        match $params.get($field) {
+            Some(ref astr) => {
+                let _t = &astr[0];
+                match _t.parse::<$tykey>() {
+                    Ok(output) => output,
+                    Err(_) => _parse_error!($field)
+                }
+            },
+            None =>  _missing_or_unrecognized! ($field)
+        }
     })
 }
 
