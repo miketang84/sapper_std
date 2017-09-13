@@ -2,6 +2,7 @@
 name = "sapper_std"
 version = "0.1.0"
 authors = ["Mike Tang <miketang84@outlook.com>"]
+description = "A wrapper for std coding for sapper web framework."
 
 [dependencies]
 serde = "1.0.7"
