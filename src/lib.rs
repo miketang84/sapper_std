@@ -210,6 +210,18 @@ macro_rules! get_form_params {
 #[macro_export]
 macro_rules! get_json_params {
     ($req:expr) => ({
+        match serde_json::from_value(get_params!($req, JsonParams).clone()) {
+            Ok(val) => val,
+            Err(_) => {
+                return res_400!("Json parameter not match to struct.");
+            }
+        }
+    })
+}
+
+#[macro_export]
+macro_rules! get_json_params {
+    ($req:expr) => ({
         get_params!($req, JsonParams)
     })
 }
