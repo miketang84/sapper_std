@@ -19,4 +19,9 @@ sapper_tmpl = "0.1"
 sapper_session = "0.1"
 sapper_logger = "0.1"
 
-
+[patch.crates-io]
+sapper_query = { git = 'https://github.com/sappworks/sapper_query.git' }
+sapper_body = { git = 'https://github.com/sappworks/sapper_body.git' }
+sapper_tmpl = { git = 'https://github.com/sappworks/sapper_tmpl.git' }
+sapper_session = { git = 'https://github.com/sappworks/sapper_session.git' }
+sapper_logger = { git = 'https://github.com/sappworks/sapper_logger.git' }
