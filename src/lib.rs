@@ -18,7 +18,7 @@ pub use sapper_session::{ SessionVal, set_cookie };
 pub use sapper_tmpl::Context;
 pub use sapper_tmpl::render;
 
-pub fn init(req: &mut Request, cookie_key: &'static str) -> Result<()> {
+pub fn init(req: &mut Request, cookie_key: Option<&'static str>) -> Result<()> {
     sapper_logger::init(req)?;
     sapper_query::parse(req)?;
     sapper_body::parse(req)?;
