@@ -258,7 +258,7 @@ macro_rules! _missing_or_unrecognized {
 }
 
 #[macro_export]
-macro_rules! _use_default {
+macro_rules! _using_default {
     ($field:expr, $default:expr) => ({
         println!("missing or unrecognized parameter {}, using default {}.", $field, $default);
         // return default
