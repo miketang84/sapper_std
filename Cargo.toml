@@ -1,6 +1,6 @@
 [package]
 name = "sapper_std"
-version = "0.1.6"
+version = "0.1.7"
 authors = ["Mike Tang <miketang84@outlook.com>"]
 license = "MIT"
 description = "A wrapper for rapid coding for sapper web framework."

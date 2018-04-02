@@ -149,28 +149,6 @@ macro_rules! res_html {
 }
 
 
-// ============ DB ============
-
-#[macro_export]
-macro_rules! get_db {
-    ($req:expr, $dbkey:ty) => ({
-        let pool_wr = $req.ext().get::<$dbkey>();
-        let db = match pool_wr {
-            Some(pool) => {
-                match pool.connect() {
-                    Ok(conn) => conn,
-                    Err(_) => {
-                        return res_500!("get db connection failed.")
-                    }
-                }
-            },
-            None => return res_500!("no db defined.")
-        };
-        
-        db
-    })
-}
-
 // ============ Params ============
 
 #[macro_export]
@@ -219,17 +197,8 @@ macro_rules! get_json_params {
     })
 }
 
-/*
 #[macro_export]
-macro_rules! get_json_params {
-    ($req:expr) => ({
-        get_params!($req, JsonParams)
-    })
-}
-*/
-
-#[macro_export]
-macro_rules! t_condition {
+macro_rules! t_cond {
     ($bool:expr, $prompt:expr) => ({
         match $bool {
             true => (),
@@ -238,14 +207,6 @@ macro_rules! t_condition {
                 return res_400!(format!("test param condition result: {}.", $prompt) );
             }
         }
-    })
-}
-
-#[macro_export]
-macro_rules! _parse_error {
-    ($field:expr) => ({
-        println!("parse parameter type error {}.", $field);
-        return res_400!(format!("parse parameter type error {}.", $field));
     })
 }
 
@@ -267,22 +228,6 @@ macro_rules! _using_default {
 }
 
 
-
-#[macro_export]
-macro_rules! t_param_parse {
-    ($params:expr, $field:expr, $tykey:ty) => ({
-        match $params.get($field) {
-            Some(ref astr) => {
-                let _t = &astr[0];
-                match _t.parse::<$tykey>() {
-                    Ok(output) => output,
-                    Err(_) => _parse_error!($field)
-                }
-            },
-            None =>  _missing_or_unrecognized! ($field)
-        }
-    })
-}
 
 
 // for PathParams, QueryParams and FormParams
@@ -307,139 +252,40 @@ macro_rules! t_param_default {
     })
 }
 
-// ========== for JSON ==========
-
 #[macro_export]
-macro_rules! t_str {
-    ($params:expr, $field:expr) => ({
-        match $params.get(&$field) {
-            Some(&Value::String(ref astr)) => astr,
-            _ =>  _missing_or_unrecognized! ($field)
+macro_rules! t_param_parse {
+    ($params:expr, $field:expr, $tykey:ty) => ({
+        match $params.get($field) {
+            Some(ref astr) => {
+                let _t = &astr[0];
+                match _t.parse::<$tykey>() {
+                    Ok(output) => output,
+                    Err(_) => {
+                        println!("parse parameter type error {}.", $field);
+                        return res_400!(format!("parse parameter type error {}.", $field));
+                    }
+                }
+            },
+            None =>  _missing_or_unrecognized! ($field)
         }
     })
 }
 
 #[macro_export]
-macro_rules! t_str_default {
-    ($params:expr, $field:expr, $default:expr) => ({
-        match $params.get(&$field) {
-            Some(&Value::String(ref astr)) => astr,
-            _ =>  _using_default! ($field, $default)
+macro_rules! t_param_parse_default {
+    ($params:expr, $field:expr, $tykey:ty, $default:expr) => ({
+        match $params.get($field) {
+            Some(ref astr) => {
+                let _t = &astr[0];
+                match _t.parse::<$tykey>() {
+                    Ok(output) => output,
+                    Err(_) => {
+                        _using_default! ($field, $default)
+                    }
+                }
+            },
+            None =>  _using_default! ($field, $default)
         }
     })
 }
 
-#[macro_export]
-macro_rules! t_i64 {
-    ($params:expr, $field:expr) => ({
-        match $params.get(&$field) {
-            Some(&Value::I64(int)) => int,
-            Some(&Value::U64(int)) => int as i64,
-            _ =>  _missing_or_unrecognized! ($field)
-        }
-    })
-}
-
-#[macro_export]
-macro_rules! t_i64_default {
-    ($params:expr, $field:expr, $default:expr) => ({
-        match $params.get(&$field) {
-            Some(&Value::I64(int)) => int,
-            Some(&Value::U64(int)) => int as i64,
-            _ =>  _using_default! ($field, $default)
-        }
-    })
-}
-
-#[macro_export]
-macro_rules! t_f64 {
-    ($params:expr, $field:expr) => ({
-        match $params.get(&$field) {
-            Some(&Value::I64(int)) => int as f64,
-            Some(&Value::U64(int)) => int as f64,
-            Some(&Value::F64(ft)) => ft,
-            _ =>  _missing_or_unrecognized! ($field)
-        }
-    })
-}
-
-#[macro_export]
-macro_rules! t_f64_default {
-    ($params:expr, $field:expr, $default:expr) => ({
-        match $params.get(&$field) {
-            Some(&Value::I64(int)) => int as f64,
-            Some(&Value::U64(int)) => int as f64,
-            Some(&Value::F64(ft)) => ft,
-            _ =>  _using_default! ($field, $default)
-        }
-    })
-}
-
-#[macro_export]
-macro_rules! t_bool {
-    ($params:expr, $field:expr) => ({
-        match $params.get(&$field) {
-            Some(&Value::Boolean(ref tof)) => *tof,
-            _ =>  _missing_or_unrecognized! ($field)
-        }
-    })
-}
-
-#[macro_export]
-macro_rules! t_bool_default {
-    ($params:expr, $field:expr, $default:expr) => ({
-        match $params.get(&$field) {
-            Some(&Value::Boolean(ref tof)) => *tof,
-            _ =>  _using_default! ($field, $default)
-        }
-    })
-}
-
-#[macro_export]
-macro_rules! t_map {
-    ($params:expr, $field:expr) => ({
-        match $params.get(&$field) {
-            Some(&Value::Map(ref map)) => map,
-            _ =>  _missing_or_unrecognized! ($field)
-        }
-    })
-}
-
-#[macro_export]
-macro_rules! t_map_default {
-    ($params:expr, $field:expr, $default:expr) => ({
-        match $params.get(&$field) {
-            Some(&Value::Map(ref map)) => map,
-            _ =>  _using_default! ($field, $default)
-        }
-    })
-}
-
-#[macro_export]
-macro_rules! t_array {
-    ($params:expr, $field:expr) => ({
-        match $params.get(&$field) {
-            Some(&Value::Array(ref array)) => array,
-            _ =>  _missing_or_unrecognized! ($field)
-        }
-    })
-}
-
-#[macro_export]
-macro_rules! t_array_default {
-    ($params:expr, $field:expr, $default:expr) => ({
-        match $params.get(&$field) {
-            Some(&Value::Array(ref array)) => array,
-            _ =>  _using_default! ($field, $default)
-        }
-    })
-}
-
-
-
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-    }
-}
