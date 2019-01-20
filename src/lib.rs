@@ -15,7 +15,7 @@ pub use sapper_query::QueryParams;
 pub use sapper_body::FormParams;
 pub use sapper_body::JsonParams;
 pub use sapper_session::{ SessionVal, set_cookie };
-pub use sapper_tmpl::Context;
+pub use sapper_tmpl::Context as WebContext;
 pub use sapper_tmpl::render;
 
 pub fn init(req: &mut Request, cookie_key: Option<&'static str>) -> Result<()> {
